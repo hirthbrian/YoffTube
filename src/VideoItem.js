@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import {
   View,
@@ -7,29 +7,37 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   AsyncStorage,
+  Alert,
 } from 'react-native';
 import {
   FileSystem,
+  Video,
 } from 'expo';
 import { Bar } from 'react-native-progress';
 
-
-export default class VideoItem extends React.Component {
+export default class VideoItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      video: null,
+      uri: null,
       progress: 0,
     };
   }
 
   componentWillMount() {
     const { id } = this.props;
-    AsyncStorage.getItem(`@YoffTube:${id}`).then(video => { this.setState({ video }) })
+
+    AsyncStorage.getItem(`@YoffTube:${id}`)
+      .then(video => {
+        this.setState({ uri: JSON.parse(video).uri })
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   onPress = () => {
-    const { id } = this.props;
+    const { id, title, thumbnail } = this.props;
 
     console.log('https://you-link.herokuapp.com/?url=https://www.youtube.com/watch?v=' + id)
     fetch('https://you-link.herokuapp.com/?url=https://www.youtube.com/watch?v=' + id)
@@ -44,17 +52,33 @@ export default class VideoItem extends React.Component {
             FileSystem.documentDirectory + `${id}.mp4`,
             {},
             ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
-              // console.log(totalBytesWritten / totalBytesExpectedToWrite);
               this.setState({ progress: totalBytesWritten / totalBytesExpectedToWrite })
             }
           );
 
           downloadResumable.downloadAsync().then((data) => {
-            console.log(data);
-            AsyncStorage.setItem(`@YoffTube:${id}`, data.uri).then(video => { this.setState({ video }) })
+            // console.log(data.uri)
+            AsyncStorage.setItem(`@YoffTube:${id}`, JSON.stringify({
+              id,
+              title,
+              thumbnail,
+              uri: data.uri,
+            }))
+              .then(item => {
+                console.log(item)
+                this.setState({ uri: item.uri })
+                this.forceUpdate();
+              })
           })
         }
       })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert(
+          'Error',
+          'The video you are trying to download is not available',
+        )
+      });
   }
 
   renderFooter = () => {
@@ -76,39 +100,52 @@ export default class VideoItem extends React.Component {
 
   renderThumbnail = () => {
     const { thumbnail } = this.props;
-    const { video } = this.state;
+    const { uri } = this.state;
     const { width } = Dimensions.get('window');
-
-    console.log(video);
 
     return (
       <View
         style={{
-          opacity: video ? 1 : 0.5,
+          opacity: uri ? 1 : 0.5,
           width: width,
           height: ((width * 180) / 320),
         }}
       >
-        <Image
-          source={{ uri: thumbnail }}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          }}
-        />
+        {uri ?
+          <Video
+            useNativeControls
+            source={{ uri: uri }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
+          />
+          :
+          <Image
+            source={{ uri: thumbnail }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
+          />
+        }
       </View>
     );
   }
 
   render() {
-    const { progress } = this.state;
+    const { progress, uri } = this.state;
     const { width } = Dimensions.get('window');
 
     return (
       <TouchableWithoutFeedback
+        disabled={uri !== null}
         onPress={this.onPress}
       >
         <View
@@ -116,14 +153,6 @@ export default class VideoItem extends React.Component {
             flex: 1,
           }}
         >
-          {/* <Video
-            useNativeControls
-            source={{ uri: video }}
-            style={{
-              width: width,
-              height: (width * 180) / 320,
-            }}
-          /> */}
           {this.renderThumbnail()}
           <Bar
             borderWidth={0}
