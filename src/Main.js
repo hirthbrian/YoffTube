@@ -1,38 +1,36 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
-  Text,
-  TextInput,
-  StatusBar,
+  Image,
   FlatList,
-  AsyncStorage,
 } from 'react-native';
+import { connect } from 'react-redux';
+import Colors from './Colors';
 
-import { search } from './Api';
 import VideoItem from './VideoItem';
+import SearchBar from './SearchBar';
 
-export default class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      videos: [],
-      text: '',
-    };
+import {
+  getHomepageVideos
+} from './actions';
+
+class Main extends React.Component {
+  componentWillMount() {
+    const { getHomepageVideos } = this.props;
+    getHomepageVideos();
   }
 
   renderItem = ({ item }) => (
     <VideoItem
-      id={item.id.videoId}
-      title={item.snippet.title}
-      thumbnail={item.snippet.thumbnails.high.url}
+      id={item.id}
     />
   );
 
   renderSeparator = () => (
     <View
       style={{
-        height: 15,
+        height: 1,
+        backgroundColor: Colors.lightBlue
       }}
     />
   )
@@ -40,74 +38,46 @@ export default class Main extends React.Component {
   renderEmpty = () => (
     <View
       style={{
-        height: 15,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <Text>
-        Please start with a search
-      </Text>
+      <Image
+        source={require('../assets/computer.png')}
+        style={{
+          width: 150,
+          height: 150,
+        }}
+      />
     </View>
   )
 
-  onChangeText = (text) => {
-    this.setState({ text: text })
-  }
-
-  onEndEditing = () => {
-    const { text } = this.state;
-
-    search(text).then(data => {
-      console.log(data)
-      const videos = Object.values(data.items);
-      this.setState({
-        videos: videos
-      });
-    })
-  }
+  renderHeader = () => (
+    <SearchBar />
+  );
 
   render() {
-    const { videos } = this.state;
+    const { videos } = this.props;
 
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <View
-          style={{
-            paddingVertical: 10,
-            paddingHorizontal: 15,
-            height: 75,
-            backgroundColor: '#551A8B',
-            justifyContent: 'flex-end'
-          }}
-        >
-          <TextInput
-            color={'#FFFFFF'}
-            selectionColor={'#FFFFFF'}
-            placeholder={'Search...'}
-            onChangeText={this.onChangeText}
-            onEndEditing={this.onEndEditing}
-            placeholderTextColor={'#CAA3EE'}
-            style={{
-              fontSize: 24,
-            }}
-          />
-        </View>
-        <FlatList
-          data={videos}
-          renderItem={this.renderItem}
-          ItemSeparatorComponent={this.renderSeparator}
-          keyExtractor={video => { return video.id.videoId }}
-          ListEmptyComponent={this.renderEmpty}
-        />
-      </View>
+      <FlatList
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        data={Object.values(videos)}
+        renderItem={this.renderItem}
+        ItemSeparatorComponent={this.renderSeparator}
+        ListEmptyComponent={this.renderEmpty}
+        ListHeaderComponent={this.renderHeader}
+        keyExtractor={video => { return video.id }}
+      />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-  },
+const mapStateToProps = ({ videos }) => ({
+  videos: videos.searchedVideos
 });
+
+export default connect(mapStateToProps, { getHomepageVideos })(Main)

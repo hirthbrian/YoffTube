@@ -6,6 +6,7 @@ import {
   createAppContainer,
 } from 'react-navigation';
 
+import Colors from './Colors';
 import Main from './Main';
 import Downloaded from './Downloaded';
 
@@ -18,7 +19,7 @@ const renderTabBarIcon = (tintColor, navigation) => {
       imageSource = require('../assets/home.png');
       break;
     case 'Downloaded':
-      imageSource = require('../assets/download.png');
+      imageSource = require('../assets/downloaded.png');
       break
   }
 
@@ -52,9 +53,12 @@ const bottomTabNavigator = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => renderTabBarIcon(tintColor, navigation)
     }),
     tabBarOptions: {
-      activeTintColor: '#551A8B',
-      // inactiveTintColor: 'gray',
+      activeTintColor: Colors.blue,
+      // tabStyle: {
+      //   backgroundColor: Colors.blue
+      // }
     },
+    lazy: false,
   }
 )
 
@@ -63,10 +67,10 @@ const RootStack = createStackNavigator({
     screen: bottomTabNavigator,
     navigationOptions: ({ navigation }) => ({
       title: 'YoffTube',
-      headerTintColor: '#FFFFFF',
+      headerTintColor: Colors.white,
       headerStyle: {
-        backgroundColor: '#551A8B'
-      }
+        backgroundColor: Colors.blue
+      },
     }),
   }
 })
