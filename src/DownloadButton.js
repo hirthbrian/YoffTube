@@ -34,7 +34,9 @@ class DownloadButton extends Component {
           <Circle
             size={25}
             borderWidth={0}
-            color={Colors.purple}
+            strokeCap={'round'}
+            color={Colors.red}
+            unfilledColor={Colors.grey}
             progress={downloadProgress}
           />
           :
@@ -44,9 +46,9 @@ class DownloadButton extends Component {
             <Image
               source={isDownloaded ? require('../assets/garbage.png') : require('../assets/download.png')}
               style={{
-                marginLeft: 15,
-                width: 25,
-                height: 25,
+                tintColor: Colors.white,
+                width: 20,
+                height: 20,
               }}
             />
           </TouchableWithoutFeedback>

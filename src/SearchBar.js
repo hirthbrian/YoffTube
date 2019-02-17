@@ -5,6 +5,7 @@ import {
   Image,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { Header } from 'react-navigation';
 
 import {
   searchVideos
@@ -33,18 +34,20 @@ class SearchBar extends React.Component {
     return (
       <View
         style={{
+          justifyContent: 'flex-end',
           paddingVertical: 10,
-          paddingHorizontal: 15,
+          paddingHorizontal: 10,
+          backgroundColor: Colors.red,
         }}
       >
         <View
           style={{
-            borderRadius: 4,
             flexDirection: 'row',
             alignItems: 'center',
             paddingVertical: 10,
-            paddingHorizontal: 15,
-            backgroundColor: Colors.blue,
+            paddingHorizontal: 10,
+            backgroundColor: Colors.grey,
+            borderRadius: 6,
           }}
         >
           <Image
@@ -52,21 +55,19 @@ class SearchBar extends React.Component {
             style={{
               width: 20,
               height: 20,
-              tintColor: Colors.white,
-              marginRight: 15,
+              tintColor: Colors.red,
             }}
           />
           <TextInput
             value={text}
-            selectionColor={Colors.white}
-            placeholder={'Search'}
+            selectionColor={Colors.red}
+            placeholder={'Search with video title or url'}
             onChangeText={this.onChangeText}
             onEndEditing={this.onEndEditing}
-            placeholderTextColor={Colors.lightBlue}
             style={{
               flex: 1,
-              color: Colors.white,
-              fontSize: 18,
+              paddingLeft: 10,
+              fontSize: 16,
             }}
           />
         </View>
@@ -75,8 +76,4 @@ class SearchBar extends React.Component {
   }
 }
 
-const mapStateToProps = ({ videos }) => ({
-  videos: videos.videos
-});
-
-export default connect(mapStateToProps, { searchVideos })(SearchBar)
+export default connect(null, { searchVideos })(SearchBar)

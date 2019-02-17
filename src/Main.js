@@ -1,83 +1,51 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
-  View,
-  Image,
-  FlatList,
-} from 'react-native';
+  View
+} from 'react-native'
 import { connect } from 'react-redux';
-import Colors from './Colors';
 
-import VideoItem from './VideoItem';
+import VideoList from './VideoList';
+import VideoType from './VideoType';
+
+import {
+  searchVideos,
+  getOfflineVideos,
+  getHomepageVideos,
+} from './actions';
 import SearchBar from './SearchBar';
 
-import {
-  getHomepageVideos
-} from './actions';
-
-class Main extends React.Component {
+class Main extends Component {
   componentWillMount() {
-    const { getHomepageVideos } = this.props;
-    getHomepageVideos();
+    const { getOfflineVideos, searchVideos } = this.props;
+    getOfflineVideos();
+    // getHomepageVideos();
+    searchVideos('');
   }
 
-  renderItem = ({ item }) => (
-    <VideoItem
-      id={item.id}
-    />
-  );
-
-  renderSeparator = () => (
-    <View
-      style={{
-        height: 1,
-        backgroundColor: Colors.lightBlue
-      }}
-    />
-  )
-
-  renderEmpty = () => (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Image
-        source={require('../assets/computer.png')}
-        style={{
-          width: 150,
-          height: 150,
-        }}
-      />
-    </View>
-  )
-
-  renderHeader = () => (
-    <SearchBar />
-  );
+  renderHeader = () => <SearchBar />
 
   render() {
-    const { videos } = this.props;
+    const { navigation, searchedVideos } = this.props;
 
     return (
-      <FlatList
-        contentContainerStyle={{
-          flexGrow: 1,
+      <View
+        style={{
+          flex: 1,
         }}
-        data={Object.values(videos)}
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={this.renderSeparator}
-        ListEmptyComponent={this.renderEmpty}
-        ListHeaderComponent={this.renderHeader}
-        keyExtractor={video => { return video.id }}
-      />
+      >
+        {this.renderHeader()}
+        <VideoList
+          videos={searchedVideos}
+          navigation={navigation}
+        />
+      </View>
     );
   }
 }
 
 const mapStateToProps = ({ videos }) => ({
-  videos: videos.searchedVideos
+  homepageVideos: videos.videos.filter(video => video.type === VideoType.HOMEPAGE),
+  searchedVideos: videos.videos.filter(video => video.type === VideoType.SEARCH)
 });
 
-export default connect(mapStateToProps, { getHomepageVideos })(Main)
+export default connect(mapStateToProps, { getOfflineVideos, getHomepageVideos, searchVideos })(Main)

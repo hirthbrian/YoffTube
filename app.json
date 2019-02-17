@@ -1,18 +1,19 @@
 {
   "expo": {
     "name": "YoffTube",
-    "description": "This project is really great.",
-    "slug": "YoffTube",
+    "description": "A YouTube video downloader",
+    "slug": "yofftube",
     "privacy": "public",
+    "githubUrl": "https://github.com/hirthbrian/YoffTube",
     "sdkVersion": "31.0.0",
     "platforms": ["ios", "android"],
     "version": "1.0.0",
-    // "orientation": "portrait",
+    "orientation": "portrait",
+    "primaryColor": "#FF5B5A",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

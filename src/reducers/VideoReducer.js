@@ -5,6 +5,12 @@ import {
   SEARCH_VIDEOS,
   SEARCH_VIDEOS_SUCCESS,
   SEARCH_VIDEOS_FAIL,
+  GET_HOMEPAGE_VIDEOS,
+  GET_HOMEPAGE_VIDEOS_SUCCESS,
+  GET_HOMEPAGE_VIDEOS_FAIL,
+  GET_CHANNEL_VIDEOS,
+  GET_CHANNEL_VIDEOS_SUCCESS,
+  GET_CHANNEL_VIDEOS_FAIL,
   DOWNLOAD_VIDEO,
   DOWNLOAD_VIDEO_SUCCESS,
   DOWNLOAD_VIDEO_FAIL,
@@ -13,10 +19,20 @@ import {
   DELETE_VIDEO_SUCCESS,
   DELETE_VIDEO_FAIL,
 } from '../actions/types';
+import VideoType from '../VideoType';
+
+const videoTemplate = {
+  id: '',
+  type: '',
+  title: '',
+  thumbnail: '',
+  date: '',
+  uri: '',
+}
 
 const INITIAL_STATE = {
-  searchedVideos: [],
-  offlineVideos: [],
+  videos: [],
+  channelVideos: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,10 +44,10 @@ export default (state = INITIAL_STATE, action) => {
     case GET_OFFLINE_VIDEOS_SUCCESS:
       return {
         ...state,
-        offlineVideos: {
-          ...state.offlineVideos,
+        videos: [
+          ...state.videos,
           ...action.payload
-        }
+        ]
       };
     case GET_OFFLINE_VIDEOS_FAIL:
       return {
@@ -44,22 +60,53 @@ export default (state = INITIAL_STATE, action) => {
     case SEARCH_VIDEOS_SUCCESS:
       return {
         ...state,
-        searchedVideos: action.payload,
+        videos: [
+          ...state.videos,
+          ...action.payload
+        ],
       };
     case SEARCH_VIDEOS_FAIL:
+      return {
+        ...state,
+      };
+    case GET_HOMEPAGE_VIDEOS:
+      return {
+        ...state,
+      };
+    case GET_HOMEPAGE_VIDEOS_SUCCESS:
+      return {
+        ...state,
+        videos: [
+          ...state.videos,
+          ...action.payload
+        ]
+      };
+    case GET_HOMEPAGE_VIDEOS_FAIL:
+      return {
+        ...state,
+      };
+    case GET_CHANNEL_VIDEOS:
+      return {
+        ...state,
+      };
+    case GET_CHANNEL_VIDEOS_SUCCESS:
+      return {
+        ...state,
+        channelVideos: action.payload
+      };
+    case GET_CHANNEL_VIDEOS_FAIL:
       return {
         ...state,
       };
     case DOWNLOAD_PROGRESS:
       return {
         ...state,
-        searchedVideos: {
-          ...state.searchedVideos,
-          [action.payload.id]: {
-            ...state.searchedVideos[action.payload.id],
-            progress: action.payload.progress
+        videos: state.videos.map(video => {
+          if (video.id === action.payload.id) {
+            video.progress = action.payload.progress
           }
-        }
+          return video
+        })
       };
     case DOWNLOAD_VIDEO:
       return {
@@ -68,33 +115,22 @@ export default (state = INITIAL_STATE, action) => {
     case DOWNLOAD_VIDEO_SUCCESS:
       return {
         ...state,
-        searchedVideos: {
-          ...state.searchedVideos,
-          [action.payload.id]: {
-            ...state.searchedVideos[action.payload.id],
-            uri: action.payload.uri,
-            progress: null
+        videos: state.videos.map(video => {
+          if (video.id === action.payload.id) {
+            video.uri = action.payload.uri;
+            delete video.progress
           }
-        },
-        offlineVideos: {
-          ...state.offlineVideos,
-          [action.payload.id]: {
-            ...state.searchedVideos[action.payload.id],
-            progress: null,
-            uri: action.payload.uri,
-          }
-        },
+          return video
+        })
       };
     case DELETE_VIDEO:
       return {
         ...state,
       };
     case DELETE_VIDEO_SUCCESS:
-      const videos = state.offlineVideos;
-      delete videos[action.payload.id];
       return {
         ...state,
-        offlineVideos: videos,
+        videos: state.videos.filter(video => video.id !== action.payload.id)
       };
     case DELETE_VIDEO_FAIL:
       return {
