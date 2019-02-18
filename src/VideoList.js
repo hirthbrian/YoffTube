@@ -28,7 +28,8 @@ class VideoList extends Component {
       progress={item.progress}
       channelTitle={item.channelTitle}
       onChannelPress={() => this.onChannelPress(item.channelId, item.channelTitle)}
-      // progress={item.progress}
+      progress={item.progress}
+      loading={item.loading}
     />
   );
 

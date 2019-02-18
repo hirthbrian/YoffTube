@@ -46,7 +46,7 @@ class SearchBar extends React.Component {
             alignItems: 'center',
             paddingVertical: 10,
             paddingHorizontal: 10,
-            backgroundColor: Colors.grey,
+            backgroundColor: Colors.white,
             borderRadius: 6,
           }}
         >

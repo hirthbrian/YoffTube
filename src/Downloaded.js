@@ -9,7 +9,10 @@ import {
 
 class Downloaded extends Component {
   render() {
-    const { videos, getOfflineVideos } = this.props;
+    const {
+      videos,
+      getOfflineVideos
+    } = this.props;
 
     return (
       <VideoList
@@ -21,7 +24,7 @@ class Downloaded extends Component {
 }
 
 const mapStateToProps = ({ videos }) => ({
-  videos: videos.videos.filter(video => video.uri)
+  videos: videos.downloaded
 });
 
 export default connect(mapStateToProps, { getOfflineVideos })(Downloaded)

@@ -103,24 +103,10 @@ class VideoItem extends Component {
       uri,
       thumbnail,
       duration,
+      progress,
+      loading,
     } = this.props;
     const { width } = Dimensions.get('window');
-
-    if (uri) {
-      return (
-        <Video
-          onFullscreenUpdate={this.onFullscreenUpdate}
-          useNativeControls
-          source={{ uri: uri }}
-          resizeMode={'contain'}
-          style={{
-            width: width,
-            height: ((width * 180) / 320),
-            backgroundColor: Colors.grey
-          }}
-        />
-      );
-    }
 
     return (
       <View
@@ -130,16 +116,31 @@ class VideoItem extends Component {
           backgroundColor: Colors.grey,
         }}
       >
-        <Image
-          source={{ uri: thumbnail }}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          }}
-        />
+        {uri ?
+          <Video
+            onFullscreenUpdate={this.onFullscreenUpdate}
+            useNativeControls
+            source={{ uri: uri }}
+            resizeMode={'contain'}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
+          />
+          : <Image
+            source={{ uri: thumbnail }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
+          />
+        }
         <View
           style={{
             position: 'absolute',
@@ -153,7 +154,8 @@ class VideoItem extends Component {
           <DownloadButton
             videoId={id}
             isDownloaded={!!uri}
-          // downloadProgress={progress}
+            loading={loading}
+            downloadProgress={progress}
           />
         </View>
         <View
@@ -196,7 +198,6 @@ class VideoItem extends Component {
 VideoItem.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
   thumbnail: PropTypes.string.isRequired,
 };
 

@@ -8,11 +8,6 @@ export const SEARCH_VIDEOS                = 'search_videos';
 export const SEARCH_VIDEOS_SUCCESS        = 'search_videos_success';
 export const SEARCH_VIDEOS_FAIL           = 'search_videos_fail';
 
-// GET HOMEPAGE VIDEOS
-export const GET_HOMEPAGE_VIDEOS          = 'get_homepage_videos';
-export const GET_HOMEPAGE_VIDEOS_SUCCESS  = 'get_homepage_videos_success';
-export const GET_HOMEPAGE_VIDEOS_FAIL     = 'get_homepage_videos_fail';
-
 // GET CHANNEL VIDEOS
 export const GET_CHANNEL_VIDEOS          = 'get_channel_videos';
 export const GET_CHANNEL_VIDEOS_SUCCESS  = 'get_channel_videos_success';

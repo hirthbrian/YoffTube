@@ -26,17 +26,22 @@ class DownloadButton extends Component {
   }
 
   render() {
-    const { downloadProgress, isDownloaded } = this.props;
+    const {
+      downloadProgress,
+      isDownloaded,
+      loading
+    } = this.props;
 
     return (
       <View>
-        {downloadProgress ?
+        {downloadProgress || loading ?
           <Circle
-            size={25}
+            size={20}
             borderWidth={0}
             strokeCap={'round'}
             color={Colors.red}
-            unfilledColor={Colors.grey}
+            indeterminate={loading}
+            // unfilledColor={Colors.grey}
             progress={downloadProgress}
           />
           :

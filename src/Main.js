@@ -5,7 +5,6 @@ import {
 import { connect } from 'react-redux';
 
 import VideoList from './VideoList';
-import VideoType from './VideoType';
 
 import {
   searchVideos,
@@ -19,33 +18,26 @@ class Main extends Component {
     const { getOfflineVideos, searchVideos } = this.props;
     getOfflineVideos();
     // getHomepageVideos();
-    searchVideos('');
+    // searchVideos('');
   }
 
   renderHeader = () => <SearchBar />
 
   render() {
-    const { navigation, searchedVideos } = this.props;
+    const { navigation, videos } = this.props;
 
     return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        {this.renderHeader()}
-        <VideoList
-          videos={searchedVideos}
-          navigation={navigation}
-        />
-      </View>
+      <VideoList
+        videos={videos}
+        navigation={navigation}
+        header={this.renderHeader}
+      />
     );
   }
 }
 
 const mapStateToProps = ({ videos }) => ({
-  homepageVideos: videos.videos.filter(video => video.type === VideoType.HOMEPAGE),
-  searchedVideos: videos.videos.filter(video => video.type === VideoType.SEARCH)
+  videos: videos.videos,
 });
 
 export default connect(mapStateToProps, { getOfflineVideos, getHomepageVideos, searchVideos })(Main)

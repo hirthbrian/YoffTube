@@ -5,9 +5,6 @@ import {
   SEARCH_VIDEOS,
   SEARCH_VIDEOS_SUCCESS,
   SEARCH_VIDEOS_FAIL,
-  GET_HOMEPAGE_VIDEOS,
-  GET_HOMEPAGE_VIDEOS_SUCCESS,
-  GET_HOMEPAGE_VIDEOS_FAIL,
   GET_CHANNEL_VIDEOS,
   GET_CHANNEL_VIDEOS_SUCCESS,
   GET_CHANNEL_VIDEOS_FAIL,
@@ -19,19 +16,10 @@ import {
   DELETE_VIDEO_SUCCESS,
   DELETE_VIDEO_FAIL,
 } from '../actions/types';
-import VideoType from '../VideoType';
-
-const videoTemplate = {
-  id: '',
-  type: '',
-  title: '',
-  thumbnail: '',
-  date: '',
-  uri: '',
-}
 
 const INITIAL_STATE = {
   videos: [],
+  downloaded: [],
   channelVideos: [],
 };
 
@@ -44,8 +32,8 @@ export default (state = INITIAL_STATE, action) => {
     case GET_OFFLINE_VIDEOS_SUCCESS:
       return {
         ...state,
-        videos: [
-          ...state.videos,
+        downloaded: [
+          ...state.downloaded,
           ...action.payload
         ]
       };
@@ -61,27 +49,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         videos: [
-          ...state.videos,
+          // ...state.videos,
           ...action.payload
         ],
       };
     case SEARCH_VIDEOS_FAIL:
-      return {
-        ...state,
-      };
-    case GET_HOMEPAGE_VIDEOS:
-      return {
-        ...state,
-      };
-    case GET_HOMEPAGE_VIDEOS_SUCCESS:
-      return {
-        ...state,
-        videos: [
-          ...state.videos,
-          ...action.payload
-        ]
-      };
-    case GET_HOMEPAGE_VIDEOS_FAIL:
       return {
         ...state,
       };
@@ -98,19 +70,28 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
       };
+    case DOWNLOAD_VIDEO:
+      return {
+        ...state,
+        videos: state.videos.map(video => {
+          if (video.id === action.payload.id) {
+            video.loading = true;
+          }
+          return video
+        })
+      };
     case DOWNLOAD_PROGRESS:
       return {
         ...state,
         videos: state.videos.map(video => {
           if (video.id === action.payload.id) {
             video.progress = action.payload.progress
+            if (video.loading) {
+              delete video.loading;
+            }
           }
           return video
         })
-      };
-    case DOWNLOAD_VIDEO:
-      return {
-        ...state,
       };
     case DOWNLOAD_VIDEO_SUCCESS:
       return {
@@ -118,7 +99,18 @@ export default (state = INITIAL_STATE, action) => {
         videos: state.videos.map(video => {
           if (video.id === action.payload.id) {
             video.uri = action.payload.uri;
-            delete video.progress
+            delete video.progress;
+          }
+          return video
+        })
+      };
+    case DOWNLOAD_VIDEO_FAIL:
+      return {
+        ...state,
+        videos: state.videos.map(video => {
+          if (video.id === action.payload.id) {
+            delete video.progress;
+            delete video.loading;
           }
           return video
         })
