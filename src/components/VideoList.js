@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   Image,
   FlatList,
 } from 'react-native';
-import Colors from './Colors';
 
-import VideoItem from './VideoItem';
+import { connect } from 'react-redux';
+
+import VideoCard from './VideoCard';
+import DownloadedVideoCard from './DownloadedVideoCard';
+import Colors from '../Colors';
+
+import {
+  downloadVideo
+} from '../actions';
 
 class VideoList extends Component {
   onChannelPress = (channelId, channelTitle) => {
@@ -15,28 +21,40 @@ class VideoList extends Component {
     navigation.navigate('Channel', { channelId, channelTitle });
   }
 
-  renderItem = ({ item }) => (
-    <VideoItem
-      id={item.id}
-      title={item.title}
-      thumbnail={item.thumbnail}
-      uri={item.uri}
-      date={item.date}
-      duration={item.duration}
-      views={item.views}
-      type={item.type}
-      progress={item.progress}
-      channelTitle={item.channelTitle}
-      onChannelPress={() => this.onChannelPress(item.channelId, item.channelTitle)}
-      progress={item.progress}
-      loading={item.loading}
-    />
-  );
+  renderItem = ({ item }) => {
+    const {
+      downloadVideo
+    } = this.props;
+
+    const defaultProps = {
+      title: item.title,
+      thumbnail: item.thumbnail,
+      date: item.date,
+      duration: item.duration,
+      views: item.views,
+      channelTitle: item.channelTitle,
+      onChannelPress: () => this.onChannelPress(item.channelId, item.channelTitle)
+    }
+
+    return (
+      item.uri ?
+        <DownloadedVideoCard
+          uri={item.uri}
+          {...defaultProps}
+        /> :
+        <VideoCard
+          progress={item.progress}
+          onDownloadPress={() => downloadVideo(item.id)}
+          {...defaultProps}
+        />
+    )
+  };
 
   renderSeparator = () => (
     <View
       style={{
-        height: 15,
+        height: 5,
+        backgroundColor: Colors.grey
       }}
     />
   )
@@ -50,20 +68,13 @@ class VideoList extends Component {
       }}
     >
       <Image
-        source={require('../assets/icon.png')}
+        source={require('../../assets/icon.png')}
         style={{
           width: 64,
           height: 64,
           opacity: 0.5
         }}
       />
-      <Text
-        style={{
-          fontFamily: 'quicksand'
-        }}
-      >
-        No videos found :(
-      </Text>
     </View>
   )
 
@@ -76,6 +87,9 @@ class VideoList extends Component {
 
     return (
       <FlatList
+        style={{
+          // backgroundColor: Colors.grey,
+        }}
         contentContainerStyle={{
           flexGrow: 1,
         }}
@@ -92,4 +106,4 @@ class VideoList extends Component {
   }
 }
 
-export default VideoList
+export default connect(null, { downloadVideo })(VideoList)

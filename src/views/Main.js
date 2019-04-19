@@ -4,14 +4,14 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux';
 
-import VideoList from './VideoList';
+import VideoList from '../components/VideoList';
 
 import {
   searchVideos,
   getOfflineVideos,
   getHomepageVideos,
-} from './actions';
-import SearchBar from './SearchBar';
+} from '../actions';
+import SearchBar from '../components/SearchBar';
 
 class Main extends Component {
   componentWillMount() {
@@ -28,7 +28,7 @@ class Main extends Component {
 
     return (
       <VideoList
-        videos={videos}
+        videos={Object.values(videos)}
         navigation={navigation}
         header={this.renderHeader}
       />

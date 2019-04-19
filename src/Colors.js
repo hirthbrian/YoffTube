@@ -8,7 +8,7 @@ const Colors = {
   white:            '#FFFFFF',
   grey:             '#F0F0F0',
   black:            '#000000',
-  transparentBlack: 'rgba(0,0,0,0.5)',
+  transparentBlack: 'rgba(0,0,0,0.75)',
 }
 
 export default Colors;

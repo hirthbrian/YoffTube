@@ -7,6 +7,12 @@ import {
 } from 'expo';
 
 import {
+  getSearchUrl,
+  getVideosUrl,
+  mapVideoFromApi,
+} from '../utils';
+
+import {
   GET_OFFLINE_VIDEOS,
   GET_OFFLINE_VIDEOS_SUCCESS,
   GET_OFFLINE_VIDEOS_FAIL,
@@ -19,7 +25,7 @@ import {
   DOWNLOAD_VIDEO,
   DOWNLOAD_VIDEO_SUCCESS,
   DOWNLOAD_VIDEO_FAIL,
-  DOWNLOAD_PROGRESS,
+  SET_DOWNLOAD_PROGRESS,
   DELETE_VIDEO,
   DELETE_VIDEO_SUCCESS,
   DELETE_VIDEO_FAIL,
@@ -32,50 +38,44 @@ const DL_URL = 'https://us-central1-yofftube.cloudfunctions.net/getYouTubeUrl?ur
 export const getOfflineVideos = () => {
   return dispatch => {
     dispatch({ type: GET_OFFLINE_VIDEOS })
-    AsyncStorage.getAllKeys((err, keys) => {
-      AsyncStorage.multiGet(keys, (err, stores) => {
-        const videosInfo = stores.map(result => {
-          return JSON.parse(result[1]);
+    try {
+      AsyncStorage.getAllKeys((err, keys) => {
+        AsyncStorage.multiGet(keys, (err, stores) => {
+          let offlineVideos = {};
+          stores.map(item => {
+            const offlineVideo = JSON.parse(item[1]);
+            offlineVideos[offlineVideo.id] = offlineVideo;
+          });
+          console.log('videosInfo', offlineVideos)
+          dispatch({ type: GET_OFFLINE_VIDEOS_SUCCESS, payload: offlineVideos })
         });
-        dispatch({ type: GET_OFFLINE_VIDEOS_SUCCESS, payload: videosInfo })
       });
-    });
+    } catch (error) {
+      console.log('getOfflineVideos error:', error)
+    }
   }
 }
 
 export const searchVideos = (query, pageToken = null) => {
   return dispatch => {
     dispatch({ type: SEARCH_VIDEOS })
-    const encodedURI = encodeURIComponent(query);
-    const pageIndex =  pageToken ? '&pageToken=' + pageToken : '';
-    console.log(`${API_URL}search?part=snippet&q=${encodedURI}&type=video&maxResults=5&key=${API_KEY}${pageIndex}`)
-    fetch(`${API_URL}search?part=snippet&q=${encodedURI}&type=video&maxResults=5&key=${API_KEY}${pageIndex}` )
+
+    fetch(getSearchUrl(query))
       .then((response) => response.json())
       .then(data => {
         if (data.error) {
-          dispatch({ type: SEARCH_VIDEOS_FAIL, payload: data.error.message });
-          return
+          return dispatch({ type: SEARCH_VIDEOS_FAIL, payload: data.error.message });
         }
 
-        const videoIds = data.items
-          .filter(item => item.snippet.liveBroadcastContent === 'none')
-          .map(item => item.id.videoId)
+        const videoIds = data.items.map(item => item.id.videoId)
 
-        fetch(`${API_URL}videos?part=snippet,statistics,contentDetails&id=${videoIds.join(',')}&key=${API_KEY}`)
+        fetch(getVideosUrl(videoIds))
           .then((response) => response.json())
           .then(data => {
-            const videosInfo = data.items
+            let videosInfo = {};
+            data.items
               .map(item => {
-                return {
-                  id: item.id,
-                  title: item.snippet.title,
-                  duration: item.contentDetails.duration,
-                  views: item.statistics.viewCount,
-                  thumbnail: item.snippet.thumbnails.high.url,
-                  date: item.snippet.publishedAt,
-                  channelId: item.snippet.channelId,
-                  channelTitle: item.snippet.channelTitle,
-                }
+                videosInfo[item.id] = mapVideoFromApi(item)
               })
             dispatch({ type: SEARCH_VIDEOS_SUCCESS, payload: videosInfo });
           })
@@ -140,7 +140,7 @@ export const getChannelVideos = (id) => {
 
 export const downloadVideo = (id) => {
   return (dispatch, getState) => {
-    let videoInfo = getState().videos.videos.filter(video => video.id === id)[0];
+    let videoInfo = getState().videos.videos[id];
     let progressIteration = 5;
     dispatch({ type: DOWNLOAD_VIDEO, payload: { id } });
     fetch(DL_URL + id)
@@ -155,7 +155,7 @@ export const downloadVideo = (id) => {
             const progress = totalBytesWritten / totalBytesExpectedToWrite;
             if (parseInt(progress * 100) === progressIteration) {
               progressIteration += 5;
-              dispatch({ type: DOWNLOAD_PROGRESS, payload: { id, progress } });
+              dispatch({ type: SET_DOWNLOAD_PROGRESS, payload: { id, progress } });
             }
           }
         );

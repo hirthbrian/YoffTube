@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import VideoList from './VideoList';
+import VideoList from '../components/VideoList';
 
 import {
   getOfflineVideos
-} from './actions';
+} from '../actions';
 
 class Downloaded extends Component {
+  componentWillMount() {
+    const { getOfflineVideos } = this.props;
+    getOfflineVideos();
+  }
+
   render() {
     const {
       videos,
@@ -16,7 +21,7 @@ class Downloaded extends Component {
 
     return (
       <VideoList
-        videos={videos}
+        videos={Object.values(videos)}
         onRefresh={getOfflineVideos}
       />
     );

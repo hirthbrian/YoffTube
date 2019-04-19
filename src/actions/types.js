@@ -1,27 +1,27 @@
 // GET OFFLINE VIDEOS
-export const GET_OFFLINE_VIDEOS           = 'get_offline_videos';
-export const GET_OFFLINE_VIDEOS_SUCCESS   = 'get_offline_videos_success';
-export const GET_OFFLINE_VIDEOS_FAIL      = 'get_offline_videos_fail';
+export const GET_OFFLINE_VIDEOS = 'GET_OFFLINE_VIDEOS';
+export const GET_OFFLINE_VIDEOS_SUCCESS = 'GET_OFFLINE_VIDEOS_SUCCESS';
+export const GET_OFFLINE_VIDEOS_FAIL = 'GET_OFFLINE_VIDEOS_FAIL';
 
 // SEARCH YOUTUBE VIDEOS
-export const SEARCH_VIDEOS                = 'search_videos';
-export const SEARCH_VIDEOS_SUCCESS        = 'search_videos_success';
-export const SEARCH_VIDEOS_FAIL           = 'search_videos_fail';
+export const SEARCH_VIDEOS = 'SEARCH_VIDEOS';
+export const SEARCH_VIDEOS_SUCCESS = 'SEARCH_VIDEOS_SUCCESS';
+export const SEARCH_VIDEOS_FAIL = 'SEARCH_VIDEOS_FAIL';
 
 // GET CHANNEL VIDEOS
-export const GET_CHANNEL_VIDEOS          = 'get_channel_videos';
-export const GET_CHANNEL_VIDEOS_SUCCESS  = 'get_channel_videos_success';
-export const GET_CHANNEL_VIDEOS_FAIL     = 'get_channel_videos_fail';
+export const GET_CHANNEL_VIDEOS = 'GET_CHANNEL_VIDEOS';
+export const GET_CHANNEL_VIDEOS_SUCCESS = 'GET_CHANNEL_VIDEOS_SUCCESS';
+export const GET_CHANNEL_VIDEOS_FAIL = 'GET_CHANNEL_VIDEOS_FAIL';
 
 // DOWNLOAD PROGRESS
-export const DOWNLOAD_PROGRESS            = 'download_progress';
+export const SET_DOWNLOAD_PROGRESS = 'SET_DOWNLOAD_PROGRESS';
 
 // DOWNLOAD YOUTUBE VIDEO
-export const DOWNLOAD_VIDEO               = 'download_video';
-export const DOWNLOAD_VIDEO_SUCCESS       = 'download_video_success';
-export const DOWNLOAD_VIDEO_FAIL          = 'download_video_fail';
+export const DOWNLOAD_VIDEO = 'DOWNLOAD_VIDEO';
+export const DOWNLOAD_VIDEO_SUCCESS = 'DOWNLOAD_VIDEO_SUCCESS';
+export const DOWNLOAD_VIDEO_FAIL = 'DOWNLOAD_VIDEO_FAIL';
 
 // DELETE VIDEO FROM PHONE
-export const DELETE_VIDEO                 = 'delete_video';
-export const DELETE_VIDEO_SUCCESS         = 'delete_video_success';
-export const DELETE_VIDEO_FAIL            = 'delete_video_fail';
+export const DELETE_VIDEO = 'DELETE_VIDEO';
+export const DELETE_VIDEO_SUCCESS = 'DELETE_VIDEO_SUCCESS';
+export const DELETE_VIDEO_FAIL = 'DELETE_VIDEO_FAIL';

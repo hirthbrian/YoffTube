@@ -9,8 +9,8 @@ import { Header } from 'react-navigation';
 
 import {
   searchVideos
-} from './actions';
-import Colors from './Colors';
+} from '../actions';
+import Colors from '../Colors';
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -26,7 +26,9 @@ class SearchBar extends React.Component {
   onEndEditing = () => {
     const { text } = this.state;
     const { searchVideos } = this.props;
-    searchVideos(text);
+    if (text.length > 0) {
+      searchVideos(text);
+    }
   }
 
   render() {
@@ -51,7 +53,7 @@ class SearchBar extends React.Component {
           }}
         >
           <Image
-            source={require('../assets/glass.png')}
+            source={require('../../assets/glass.png')}
             style={{
               width: 20,
               height: 20,

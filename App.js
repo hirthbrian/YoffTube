@@ -9,7 +9,7 @@ import ReduxThunk from 'redux-thunk';
 import reducers from './src/reducers'
 
 import RootStack from './src/Rooter';
-import ErrorHandler from './src/ErrorHandler';
+import ErrorHandler from './src/components/ErrorHandler';
 
 const composeEnhancers =
   typeof window === 'object' &&

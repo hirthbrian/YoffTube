@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import VideoList from './VideoList';
+import VideoList from '../components/VideoList';
 
 import {
   getChannelVideos
-} from './actions';
+} from '../actions';
 
 class Channel extends Component {
   componentWillMount() {

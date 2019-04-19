@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Image,
+  AsyncStorage,
   TouchableWithoutFeedback,
 } from 'react-native';
 import {
@@ -9,9 +10,9 @@ import {
 } from 'react-navigation';
 
 import Colors from './Colors';
-import Main from './Main';
-import Downloaded from './Downloaded';
-import Channel from './Channel';
+import Main from './views/Main';
+import Downloaded from './views/Downloaded';
+import Channel from './views/Channel';
 
 const RootStack = createStackNavigator({
   Main: {
@@ -58,6 +59,23 @@ const RootStack = createStackNavigator({
       headerTitleStyle: {
         fontFamily: 'quicksand-bold'
       },
+      headerRightContainerStyle: {
+        paddingRight: 10,
+      },
+      headerRight: (
+        <TouchableWithoutFeedback
+          onPress={() => AsyncStorage.clear()}
+        >
+          <Image
+            source={require('../assets/garbage.png')}
+            style={{
+              width: 25,
+              height: 25,
+              tintColor: '#FFFFFF',
+            }}
+          />
+        </TouchableWithoutFeedback>
+      )
     })
   },
   Channel: {
