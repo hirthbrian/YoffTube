@@ -95,7 +95,7 @@ class VideoList extends Component {
         }}
         data={videos}
         renderItem={this.renderItem}
-        ItemSeparatorComponent={this.renderSeparator}
+        // ItemSeparatorComponent={this.renderSeparator}
         ListEmptyComponent={this.renderEmpty}
         ListHeaderComponent={header}
         onRefresh={onRefresh}

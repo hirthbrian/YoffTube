@@ -73,18 +73,18 @@ export default (state = INITIAL_STATE, action) => {
     case DOWNLOAD_VIDEO_FAIL:
       return {
         ...state,
-        videos: state.videos.map(video => {
-          if (video.id === action.payload.id) {
-            delete video.progress;
-            delete video.loading;
+        videos: {
+          ...state.videos,
+          [action.payload.id]: {
+            ...state.videos[action.payload.id],
+            progress: null,
           }
-          return video
-        })
+        },
       };
     case DELETE_VIDEO_SUCCESS:
       return {
         ...state,
-        videos: state.videos.filter(video => video.id !== action.payload.id)
+        // videos: state.videos.filter(video => video.id !== action.payload.id)
       };
     default:
       return state;

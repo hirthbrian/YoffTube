@@ -46,7 +46,6 @@ export const getOfflineVideos = () => {
             const offlineVideo = JSON.parse(item[1]);
             offlineVideos[offlineVideo.id] = offlineVideo;
           });
-          console.log('videosInfo', offlineVideos)
           dispatch({ type: GET_OFFLINE_VIDEOS_SUCCESS, payload: offlineVideos })
         });
       });

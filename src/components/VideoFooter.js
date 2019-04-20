@@ -42,44 +42,25 @@ class VideoFooter extends Component {
           >
             {title}
           </Text>
-          <View
+          <Text
             style={{
+              flex: 1,
+              fontSize: 12,
               paddingTop: 10,
-              flexDirection: 'row',
               alignItems: 'flex-end',
-              justifyContent: 'space-between'
             }}
           >
-            <View
+            <Text
+              onPress={onChannelPress}
               style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'flex-end',
+                fontSize: 14,
+                textDecorationLine: 'underline',
               }}
             >
-              {channelTitle &&
-                <Text
-                  onPress={onChannelPress}
-                >
-                  <Text
-                    style={{
-                      textDecorationLine: 'underline',
-                    }}
-                  >
-                    {channelTitle}
-                  </Text>
-                  {' - '}
-                </Text>
-              }
-              <Text
-                style={{
-                  fontSize: 12,
-                }}
-              >
-                {`${approx(views)} views - ${moment(date).from(moment())}`}
-              </Text>
-            </View>
-          </View>
+              {channelTitle}
+            </Text>
+            {` • ${approx(views)} views • ${moment(date).from(moment())}`}
+          </Text>
         </View>
       </View>
     );
@@ -90,6 +71,7 @@ VideoFooter.propTypes = {
   date: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   channelTitle: PropTypes.string.isRequired,
+  onChannelPress: PropTypes.func.isRequired,
   views: PropTypes.string.isRequired,
 };
 

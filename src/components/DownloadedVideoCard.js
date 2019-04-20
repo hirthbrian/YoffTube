@@ -5,6 +5,7 @@ import {
   Image,
   Text,
   Dimensions,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   Video,
@@ -13,8 +14,17 @@ import {
 
 import Colors from '../Colors';
 import VideoFooter from './VideoFooter';
+import Duration from './Duration';
 
 class DownloadedVideoCard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      startPlaying: false,
+    }
+  }
+
   onFullscreenUpdate = (fullscreenUpdate) => {
     switch (fullscreenUpdate) {
       case Video.FULLSCREEN_UPDATE_PLAYER_DID_PRESENT:
@@ -26,11 +36,67 @@ class DownloadedVideoCard extends Component {
     }
   }
 
+  onPress = () => this.setState({ startPlaying: true })
+
+  renderPlayThumbnail = () => {
+    const {
+      duration,
+      thumbnail,
+    } = this.props;
+
+    return (
+      <TouchableWithoutFeedback
+        onPress={this.onPress}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Image
+            source={{ uri: thumbnail }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
+          />
+          <View
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: Colors.transparentBlack,
+            }}
+          >
+            <Image
+              source={require('../../assets/play.png')}
+              style={{
+                width: 35,
+                height: 35,
+                tintColor: Colors.white,
+              }}
+            />
+          </View>
+          <Duration
+            duration={duration}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+
   renderThumbnail = () => {
     const {
       uri,
-      thumbnail,
     } = this.props;
+    const { startPlaying } = this.state
     const { width } = Dimensions.get('window');
 
     return (
@@ -42,6 +108,7 @@ class DownloadedVideoCard extends Component {
         }}
       >
         <Video
+          shouldPlay={startPlaying}
           onFullscreenUpdate={this.onFullscreenUpdate}
           useNativeControls
           source={{ uri: uri }}
@@ -54,6 +121,7 @@ class DownloadedVideoCard extends Component {
             left: 0,
           }}
         />
+        {startPlaying || this.renderPlayThumbnail()}
       </View>
     );
   }

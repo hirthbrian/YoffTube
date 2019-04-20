@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {
   View,
   Text,
-  ActivityIndicator,
+  Animated,
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -17,16 +17,27 @@ import {
 } from '../actions';
 
 class DownloadButton extends Component {
+  constructor(props) {
+    super(props);
+
+    this.progressValue = new Animated.Value(0);
+    this.rotateAnim = this.progressValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['90deg', '0deg']
+    });
+  }
+
   renderDownload = () => (
     <TouchableWithoutFeedback
       onPress={this.props.onPress}
     >
       <Image
-        source={require('../../assets/download.png')}
+        source={require('../../assets/play.png')}
         style={{
+          transform: [{ rotate: '90deg' }],
           tintColor: Colors.white,
-          width: 30,
-          height: 30,
+          width: 35,
+          height: 35,
         }}
       />
     </TouchableWithoutFeedback>
@@ -35,15 +46,36 @@ class DownloadButton extends Component {
   renderProgress = () => {
     const { progress } = this.props;
 
+    if (progress !== -1) {
+      this.progressValue.setValue(progress)
+    }
+
     return (
-      <Circle
-        size={60}
-        thickness={6}
-        indeterminate={progress === -1}
-        progress={progress}
-        borderWidth={0}
-        color={Colors.white}
-      />
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Circle
+          size={60}
+          indeterminate={progress === -1}
+          progress={progress}
+          borderWidth={0}
+          color={Colors.white}
+        />
+        <Animated.Image
+          source={require('../../assets/play.png')}
+          style={{
+            position: 'absolute',
+            tintColor: Colors.white,
+            transform: [{ rotate: this.rotateAnim }],
+            width: 35,
+            height: 35,
+          }}
+        />
+      </View>
     )
   }
 
@@ -74,6 +106,7 @@ class DownloadButton extends Component {
             backgroundColor: Colors.transparentBlack,
           }}
         >
+          {/* {this.renderProgress()} */}
           {progress ? this.renderProgress() : this.renderDownload()}
         </View>
       </View>
