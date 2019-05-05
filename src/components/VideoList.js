@@ -12,7 +12,9 @@ import DownloadedVideoCard from './DownloadedVideoCard';
 import Colors from '../Colors';
 
 import {
-  downloadVideo
+  downloadVideo,
+  selectDownloadQuality,
+  deleteVideo
 } from '../actions';
 
 class VideoList extends Component {
@@ -23,7 +25,9 @@ class VideoList extends Component {
 
   renderItem = ({ item }) => {
     const {
-      downloadVideo
+      downloaded,
+      deleteVideo,
+      selectDownloadQuality
     } = this.props;
 
     const defaultProps = {
@@ -37,14 +41,15 @@ class VideoList extends Component {
     }
 
     return (
-      item.uri ?
+      downloaded[item.id] ?
         <DownloadedVideoCard
           uri={item.uri}
+          onPressDelete={() => deleteVideo(item.id)}
           {...defaultProps}
         /> :
         <VideoCard
           progress={item.progress}
-          onDownloadPress={() => downloadVideo(item.id)}
+          onDownloadPress={() => selectDownloadQuality(item.id)}
           {...defaultProps}
         />
     )
@@ -87,23 +92,27 @@ class VideoList extends Component {
 
     return (
       <FlatList
-        style={{
-          // backgroundColor: Colors.grey,
-        }}
         contentContainerStyle={{
           flexGrow: 1,
         }}
         data={videos}
         renderItem={this.renderItem}
-        // ItemSeparatorComponent={this.renderSeparator}
         ListEmptyComponent={this.renderEmpty}
         ListHeaderComponent={header}
         onRefresh={onRefresh}
         refreshing={false}
-        keyExtractor={video => { return video.id }}
+        keyExtractor={video => video.id}
       />
     );
   }
 }
 
-export default connect(null, { downloadVideo })(VideoList)
+const mapStateToProps = ({ videos }) => ({
+  downloaded: videos.downloaded,
+});
+
+export default connect(mapStateToProps, {
+  downloadVideo,
+  selectDownloadQuality,
+  deleteVideo
+})(VideoList)

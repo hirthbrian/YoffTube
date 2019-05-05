@@ -9,6 +9,7 @@ import {
 import {
   getSearchUrl,
   getVideosUrl,
+  getChannelUrl,
   mapVideoFromApi,
 } from '../utils';
 
@@ -29,11 +30,17 @@ import {
   DELETE_VIDEO,
   DELETE_VIDEO_SUCCESS,
   DELETE_VIDEO_FAIL,
+  DOWNLOAD_QUALITY,
+  DOWNLOAD_QUALITY_SUCCESS,
+  DOWNLOAD_QUALITY_FAIL,
+  TEST_TEST,
 } from './types';
 
-const API_KEY = 'AIzaSyA8oHYJ-Cn_OLX82_F3zk9T4x2u2Lq7Twc';
-const API_URL = 'https://www.googleapis.com/youtube/v3/';
-const DL_URL = 'https://us-central1-yofftube.cloudfunctions.net/getYouTubeUrl?url=';
+import {
+  showQualitySelector
+} from './SettingsActions'
+
+const API_URL = 'https://us-central1-yofftube.cloudfunctions.net';
 
 export const getOfflineVideos = () => {
   return dispatch => {
@@ -55,52 +62,59 @@ export const getOfflineVideos = () => {
   }
 }
 
-export const searchVideos = (query, pageToken = null) => {
-  return dispatch => {
-    dispatch({ type: SEARCH_VIDEOS })
+export const searchVideos = (query, pageToken = null) => dispatch => {
+  // return dispatch => {
+  dispatch({ type: SEARCH_VIDEOS })
 
-    fetch(getSearchUrl(query))
-      .then((response) => response.json())
-      .then(data => {
-        if (data.error) {
-          return dispatch({ type: SEARCH_VIDEOS_FAIL, payload: data.error.message });
-        }
+  fetch(`${API_URL}/search?query=${query}`)
+    .then(response => response.json())
+    .then(data => {
+      dispatch({ type: SEARCH_VIDEOS_SUCCESS, payload: data });
+    })
 
-        const videoIds = data.items.map(item => item.id.videoId)
+  // fetch(getSearchUrl(query))
+  //   .then((response) => response.json())
+  //   .then(data => {
+  //     if (data.error) {
+  //       return dispatch({ type: SEARCH_VIDEOS_FAIL, payload: data.error.message });
+  //     }
 
-        fetch(getVideosUrl(videoIds))
-          .then((response) => response.json())
-          .then(data => {
-            let videosInfo = {};
-            data.items
-              .map(item => {
-                videosInfo[item.id] = mapVideoFromApi(item)
-              })
-            dispatch({ type: SEARCH_VIDEOS_SUCCESS, payload: videosInfo });
-          })
-          .catch(error => {
-            console.log(error);
-            dispatch({ type: SEARCH_VIDEOS_FAIL })
-          })
+  //     const videoIds = data.items.map(item => item.id.videoId)
+
+  //     fetch(getVideosUrl(videoIds))
+  //       .then((response) => response.json())
+  //       .then(data => {
+  //         let videosInfo = {};
+  //         data.items
+  //           .map(item => {
+  //             videosInfo[item.id] = mapVideoFromApi(item)
+  //           })
+  //         dispatch({ type: SEARCH_VIDEOS_SUCCESS, payload: videosInfo });
+  //       })
+  //       .catch(error => {
+  //         console.log(error);
+  //         dispatch({ type: SEARCH_VIDEOS_FAIL })
+  //       })
 
 
-      })
-      .catch(error => {
-        console.log(error);
-        dispatch({ type: SEARCH_VIDEOS_FAIL })
-      })
-  }
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //     dispatch({ type: SEARCH_VIDEOS_FAIL })
+  //   })
+  // }
 }
 
 export const deleteVideo = (id) => {
   return (dispatch, getState) => {
     dispatch({ type: DELETE_VIDEO });
-    let videoInfo = getState().videos.videos.filter(video => video.id === id)[0];
+    const videoInfo = getState().videos.downloaded[id];
     FileSystem.deleteAsync(videoInfo.uri)
       .then(() => {
         AsyncStorage.removeItem(`@YoffTube:${id}`)
           .then(() => {
-            dispatch({ type: DELETE_VIDEO_SUCCESS, payload: { id } });
+            dispatch({ type: DELETE_VIDEO_SUCCESS });
+            dispatch(getOfflineVideos())
           })
       })
       .catch(error => {
@@ -137,40 +151,76 @@ export const getChannelVideos = (id) => {
   }
 }
 
-export const downloadVideo = (id) => {
-  return (dispatch, getState) => {
-    let videoInfo = getState().videos.videos[id];
-    let progressIteration = 5;
-    dispatch({ type: DOWNLOAD_VIDEO, payload: { id } });
-    fetch(DL_URL + id)
+export const selectDownloadQuality = (id) => {
+  return (dispatch) => {
+    dispatch({ type: DOWNLOAD_QUALITY, payload: { id } });
+    fetch(`${API_URL}/getDownloadUrls?url=${id}`)
       .then((response) => response.json())
       .then((responseJson) => {
-        const videoUrl = responseJson.url;
-        const downloadResumable = FileSystem.createDownloadResumable(
-          videoUrl,
-          FileSystem.documentDirectory + `${id}.mp4`,
-          {},
-          ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
-            const progress = totalBytesWritten / totalBytesExpectedToWrite;
-            if (parseInt(progress * 100) === progressIteration) {
-              progressIteration += 5;
-              dispatch({ type: SET_DOWNLOAD_PROGRESS, payload: { id, progress } });
-            }
-          }
-        );
 
-        downloadResumable.downloadAsync()
-          .then((data) => {
-            delete videoInfo.progress
-            AsyncStorage.setItem(`@YoffTube:${id}`, JSON.stringify({ ...videoInfo, uri: data.uri }))
-              .then(() => {
-                dispatch({ type: DOWNLOAD_VIDEO_SUCCESS, payload: { id, uri: data.uri } });
-              })
-          })
+        const choice = responseJson.map(item => {
+          return {
+            id,
+            url: item.url,
+            title: `${item.resolution} (${item.size})`,
+          }
+        })
+        dispatch(showQualitySelector(choice))
+        dispatch({ type: DOWNLOAD_QUALITY_SUCCESS, payload: { id } });
       })
       .catch((error) => {
         console.log(error);
-        dispatch({ type: DOWNLOAD_VIDEO_FAIL });
+        dispatch({ type: DOWNLOAD_QUALITY_FAIL, payload: { id } });
       });
   }
+}
+
+export const downloadVideo = (url, id) => (dispatch, getState) => {
+  let videoInfo = getState().videos.videos[id];
+  let progressIteration = 1;
+  dispatch({ type: DOWNLOAD_VIDEO, payload: { id } });
+
+  const downloadResumable = FileSystem.createDownloadResumable(
+    url,
+    FileSystem.documentDirectory + `${id}.mp4`,
+    {},
+    ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
+      const progress = totalBytesWritten / totalBytesExpectedToWrite;
+      if (parseInt(progress * 100) === progressIteration) {
+        progressIteration += 1;
+        dispatch({ type: SET_DOWNLOAD_PROGRESS, payload: { id, progress } });
+      }
+    }
+  );
+
+  downloadResumable.downloadAsync()
+    .then((data) => {
+      delete videoInfo.progress
+      AsyncStorage.setItem(`@YoffTube:${id}`, JSON.stringify({ ...videoInfo, uri: data.uri }))
+        .then(() => {
+          dispatch({ type: DOWNLOAD_VIDEO_SUCCESS, payload: { id, uri: data.uri } });
+        })
+    })
+}
+
+export const searchChannel = (query) => dispatch => {
+  fetch(getChannelUrl(query))
+    .then((response) => response.json())
+    .then((responseJson) => {
+      const channels = responseJson.items.map(item => {
+        console.log('item', item)
+        return {
+          id: item.id.channelId,
+          name: item.snippet.title,
+          thumbnail: item.snippet.thumbnails.default.url
+        }
+      })
+
+      console.log('channels', channels)
+      dispatch({ type: TEST_TEST, payload: channels });
+
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }

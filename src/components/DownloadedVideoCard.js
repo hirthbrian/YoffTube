@@ -42,6 +42,7 @@ class DownloadedVideoCard extends Component {
     const {
       duration,
       thumbnail,
+      onPressDelete,
     } = this.props;
 
     return (
@@ -87,6 +88,32 @@ class DownloadedVideoCard extends Component {
           <Duration
             duration={duration}
           />
+          <TouchableWithoutFeedback
+            onPress={onPressDelete}
+          >
+            <View
+              style={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                width: 30,
+                height: 30,
+                borderRadius: 4,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: Colors.transparentBlack,
+              }}
+            >
+              <Image
+                source={require('../../assets/garbage.png')}
+                style={{
+                  width: 20,
+                  height: 20,
+                  tintColor: Colors.white,
+                }}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
     );

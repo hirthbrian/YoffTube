@@ -7,12 +7,18 @@ import {
   DOWNLOAD_VIDEO_FAIL,
   SET_DOWNLOAD_PROGRESS,
   DELETE_VIDEO_SUCCESS,
+  DOWNLOAD_QUALITY,
+  DOWNLOAD_QUALITY_SUCCESS,
+  DOWNLOAD_QUALITY_FAIL,
+  TEST_TEST
 } from '../actions/types';
 
 const INITIAL_STATE = {
   videos: [],
+  pageToken: '',
   downloaded: [],
   channelVideos: [],
+  channels: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -27,8 +33,9 @@ export default (state = INITIAL_STATE, action) => {
     case SEARCH_VIDEOS_SUCCESS:
       return {
         ...state,
+        pageToken: action.payload.pageToken,
         videos: {
-          ...action.payload
+          ...action.payload.items,
         },
       };
     case GET_CHANNEL_VIDEOS_SUCCESS:
@@ -84,8 +91,45 @@ export default (state = INITIAL_STATE, action) => {
     case DELETE_VIDEO_SUCCESS:
       return {
         ...state,
-        // videos: state.videos.filter(video => video.id !== action.payload.id)
       };
+    case DOWNLOAD_QUALITY:
+      return {
+        ...state,
+        videos: {
+          ...state.videos,
+          [action.payload.id]: {
+            ...state.videos[action.payload.id],
+            progress: -1,
+          }
+        }
+      };
+    case DOWNLOAD_QUALITY_SUCCESS:
+      return {
+        ...state,
+        videos: {
+          ...state.videos,
+          [action.payload.id]: {
+            ...state.videos[action.payload.id],
+            progress: null,
+          }
+        }
+      };
+    case DOWNLOAD_QUALITY_FAIL:
+      return {
+        ...state,
+        videos: {
+          ...state.videos,
+          [action.payload.id]: {
+            ...state.videos[action.payload.id],
+            progress: null,
+          }
+        }
+      };
+    case TEST_TEST:
+      return {
+        ...state,
+        channels: action.payload
+      }
     default:
       return state;
   }

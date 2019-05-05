@@ -60,6 +60,7 @@ class DownloadButton extends Component {
       >
         <Circle
           size={60}
+          strokeCap='round'
           indeterminate={progress === -1}
           progress={progress}
           borderWidth={0}
