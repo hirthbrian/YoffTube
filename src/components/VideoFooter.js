@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {
   View,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import moment from 'moment';
 
@@ -42,25 +43,30 @@ class VideoFooter extends Component {
           >
             {title}
           </Text>
-          <Text
+          <View
             style={{
               flex: 1,
-              fontSize: 12,
               paddingTop: 10,
+              flexDirection: 'row',
               alignItems: 'flex-end',
             }}
           >
             <Text
               onPress={onChannelPress}
               style={{
-                fontSize: 14,
                 textDecorationLine: 'underline',
               }}
             >
               {channelTitle}
             </Text>
-            {` • ${approx(views)} views • ${moment(date).from(moment())}`}
-          </Text>
+            <Text
+              style={{
+                fontSize: 12,
+              }}
+            >
+              {` • ${approx(views)} views • ${moment(date).from(moment())}`}
+            </Text>
+          </View>
         </View>
       </View>
     );

@@ -15,21 +15,22 @@ class Downloaded extends Component {
 
   render() {
     const {
-      videos,
+      items,
       getOfflineVideos
     } = this.props;
 
     return (
       <VideoList
-        videos={Object.values(videos)}
+        navigation={this.props.navigation}
+        videos={Object.values(items)}
         onRefresh={getOfflineVideos}
       />
     );
   }
 }
 
-const mapStateToProps = ({ videos }) => ({
-  videos: videos.downloaded
+const mapStateToProps = ({ download }) => ({
+  items: download.items
 });
 
 export default connect(mapStateToProps, { getOfflineVideos })(Downloaded)

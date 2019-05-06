@@ -13,21 +13,22 @@ import Colors from '../Colors';
 
 import {
   downloadVideo,
-  selectDownloadQuality,
-  deleteVideo
+  getDownloadUrl,
+  deleteVideo,
+  getChannelVideos,
 } from '../actions';
 
 class VideoList extends Component {
-  onChannelPress = (channelId, channelTitle) => {
+  onChannelPress = (id, title) => {
     const { navigation } = this.props;
-    navigation.navigate('Channel', { channelId, channelTitle });
+    navigation.navigate('Channel', { id, title });
   }
 
   renderItem = ({ item }) => {
     const {
       downloaded,
       deleteVideo,
-      selectDownloadQuality
+      getDownloadUrl
     } = this.props;
 
     const defaultProps = {
@@ -49,7 +50,7 @@ class VideoList extends Component {
         /> :
         <VideoCard
           progress={item.progress}
-          onDownloadPress={() => selectDownloadQuality(item.id)}
+          onDownloadPress={() => getDownloadUrl(item.id)}
           {...defaultProps}
         />
     )
@@ -107,12 +108,13 @@ class VideoList extends Component {
   }
 }
 
-const mapStateToProps = ({ videos }) => ({
-  downloaded: videos.downloaded,
+const mapStateToProps = ({ download }) => ({
+  downloaded: download.items,
 });
 
 export default connect(mapStateToProps, {
   downloadVideo,
-  selectDownloadQuality,
-  deleteVideo
+  getDownloadUrl,
+  deleteVideo,
+  getChannelVideos
 })(VideoList)

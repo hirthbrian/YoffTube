@@ -107,7 +107,6 @@ class DownloadButton extends Component {
             backgroundColor: Colors.transparentBlack,
           }}
         >
-          {/* {this.renderProgress()} */}
           {progress ? this.renderProgress() : this.renderDownload()}
         </View>
       </View>

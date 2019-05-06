@@ -45,26 +45,9 @@ const RootStack = createStackNavigator({
       headerTitleStyle: {
         fontFamily: 'quicksand-bold'
       },
-      headerLeftContainerStyle: {
-        paddingLeft: 10,
-      },
       headerRightContainerStyle: {
         paddingRight: 10,
       },
-      headerLeft: (
-        <TouchableWithoutFeedback
-          onPress={navigation.getParam('headerLeftPress')}
-        >
-          <Image
-            source={require('../assets/user.png')}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: '#FFFFFF',
-            }}
-          />
-        </TouchableWithoutFeedback>
-      ),
       headerRight: (
         <TouchableWithoutFeedback
           onPress={() => navigation.navigate('Downloaded')}
@@ -92,6 +75,7 @@ const RootStack = createStackNavigator({
       headerTitleStyle: {
         fontFamily: 'quicksand-bold'
       },
+      headerBackTitle: null,
       headerRightContainerStyle: {
         paddingRight: 10,
       },
@@ -114,7 +98,7 @@ const RootStack = createStackNavigator({
   Channel: {
     screen: Channel,
     navigationOptions: ({ navigation }) => ({
-      title: navigation.getParam('channelTitle'),
+      title: navigation.getParam('title'),
       headerTintColor: Colors.white,
       headerStyle: {
         backgroundColor: Colors.red

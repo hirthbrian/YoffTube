@@ -9,25 +9,32 @@ import {
 
 class Channel extends Component {
   componentWillMount() {
-    const { getChannelVideos, navigation } = this.props;
+    const {
+      navigation,
+      getChannelVideos
+    } = this.props;
 
-    console.log(navigation.getParam('channelId'))
-    getChannelVideos(navigation.getParam('channelId'))
+    const channelId = navigation.getParam('id');
+
+    getChannelVideos(channelId)
   }
-
   render() {
-    const { videos } = this.props;
+    const {
+      items,
+    } = this.props;
 
     return (
       <VideoList
-        videos={videos}
+        videos={Object.values(items)}
       />
     );
   }
 }
 
-const mapStateToProps = ({ videos }) => ({
-  videos: videos.channelVideos
+const mapStateToProps = ({ channel }) => ({
+  items: channel.items
 });
 
-export default connect(mapStateToProps, { getChannelVideos })(Channel)
+export default connect(mapStateToProps, {
+  getChannelVideos
+})(Channel)

@@ -3,9 +3,9 @@ import {
   View,
   TextInput,
   Image,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Header } from 'react-navigation';
 
 import {
   searchVideos
@@ -22,6 +22,8 @@ class SearchBar extends React.Component {
   }
 
   onChangeText = text => this.setState({ text });
+
+  clearText = () => this.setState({ text: '' })
 
   onEndEditing = () => {
     const { text } = this.state;
@@ -63,7 +65,7 @@ class SearchBar extends React.Component {
           <TextInput
             value={text}
             selectionColor={Colors.red}
-            placeholder={'Search with video title or url'}
+            placeholder={'Search with video title, url or id'}
             onChangeText={this.onChangeText}
             onEndEditing={this.onEndEditing}
             style={{
@@ -72,8 +74,22 @@ class SearchBar extends React.Component {
               fontSize: 16,
             }}
           />
+          {text.length > 0 &&
+            < TouchableWithoutFeedback
+              onPress={this.clearText}
+            >
+              <Image
+                source={require('../../assets/cross.png')}
+                style={{
+                  width: 20,
+                  height: 20,
+                  tintColor: Colors.red,
+                }}
+              />
+            </TouchableWithoutFeedback>
+          }
         </View>
-      </View>
+      </View >
     );
   }
 }

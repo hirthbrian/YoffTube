@@ -56,6 +56,7 @@ class VideoCard extends Component {
       title,
       views,
       channelTitle,
+      onChannelPress,
     } = this.props;
 
     return (
@@ -70,7 +71,7 @@ class VideoCard extends Component {
           title={title}
           views={views}
           channelTitle={channelTitle}
-          onChannelPress={() => { }}
+          onChannelPress={onChannelPress}
         />
       </View>
     );

@@ -1,46 +1,30 @@
 import React, { Component } from 'react';
 import {
-  View
+  View,
 } from 'react-native'
 import { connect } from 'react-redux';
 
+import DownloadSelector from '../components/DownloadSelector';
 import VideoList from '../components/VideoList';
 
 import {
   searchVideos,
-  toggleSettingsMenu,
   getOfflineVideos,
-  getHomepageVideos,
 } from '../actions';
+
 import SearchBar from '../components/SearchBar';
-import Settings from '../components/Settings';
-import QualitySelector from '../components/QualitySelector';
 
 class Main extends Component {
   componentWillMount() {
-    const {
-      navigation,
-      getOfflineVideos,
-      searchVideos
-    } = this.props;
+    const { getOfflineVideos } = this.props;
 
-    navigation.setParams({
-      headerLeftPress: this.onHeaderLeftPress
-    });
     getOfflineVideos();
-    // getHomepageVideos();
-    // searchVideos('');
   }
-
-  renderHeader = () => <SearchBar />
-
-  onHeaderLeftPress = () => this.props.toggleSettingsMenu()
 
   render() {
     const {
       navigation,
       videos,
-      settingsMenuVisible
     } = this.props;
 
     return (
@@ -49,13 +33,8 @@ class Main extends Component {
           flex: 1,
         }}
       >
-        <Settings
-          isVisible={settingsMenuVisible}
-          onPressOutside={this.onHeaderLeftPress}
-        />
-        <QualitySelector
-        />
-        {this.renderHeader()}
+        <SearchBar />
+        <DownloadSelector />
         <VideoList
           videos={Object.values(videos)}
           navigation={navigation}
@@ -65,14 +44,11 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = ({ videos, settings }) => ({
-  videos: videos.videos,
-  settingsMenuVisible: settings.settingsMenuVisible,
+const mapStateToProps = ({ videos }) => ({
+  videos: videos.items,
 });
 
 export default connect(mapStateToProps, {
-  toggleSettingsMenu,
   getOfflineVideos,
-  getHomepageVideos,
   searchVideos
 })(Main)

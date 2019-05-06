@@ -11,7 +11,6 @@ class Duration extends Component {
   render() {
     const { duration } = this.props;
 
-
     return (
       <View
         style={{

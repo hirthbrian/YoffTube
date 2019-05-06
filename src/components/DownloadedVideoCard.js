@@ -158,6 +158,7 @@ class DownloadedVideoCard extends Component {
       date,
       title,
       views,
+      onChannelPress,
       channelTitle,
     } = this.props;
 
@@ -173,7 +174,7 @@ class DownloadedVideoCard extends Component {
           title={title}
           views={views}
           channelTitle={channelTitle}
-          onChannelPress={() => { }}
+          onChannelPress={onChannelPress}
         />
       </View>
     );

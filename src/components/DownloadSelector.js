@@ -13,21 +13,21 @@ import Colors from '../Colors';
 
 import {
   downloadVideo,
-  showQualitySelector,
-  hideQualitySelector,
+  showDownloadSelector,
+  hideDownloadSelector,
 } from '../actions';
 
-class QualitySelector extends Component {
+class DownloadSelector extends Component {
   renderItem = ({ item }) => {
     const {
       downloadVideo,
-      hideQualitySelector,
+      hideDownloadSelector,
     } = this.props;
 
     return (
       <TouchableHighlight
         onPress={() => {
-          hideQualitySelector()
+          hideDownloadSelector()
           downloadVideo(item.url, item.id)
         }}
       >
@@ -69,19 +69,17 @@ class QualitySelector extends Component {
 
   render() {
     const {
-      qualityOptions,
-      isQualitySelectorVisible,
-      hideQualitySelector,
+      downloadOptions,
+      isDownloadSelectorVisible,
+      hideDownloadSelector,
     } = this.props;
-
-    console.log('qualityOptions', qualityOptions)
 
     return (
       <Modal
         animationIn={'fadeIn'}
         animationOut={'fadeOut'}
-        isVisible={isQualitySelectorVisible}
-        onBackdropPress={hideQualitySelector}
+        isVisible={isDownloadSelectorVisible}
+        onBackdropPress={hideDownloadSelector}
       >
         <View>
           <FlatList
@@ -90,7 +88,7 @@ class QualitySelector extends Component {
               backgroundColor: Colors.white
             }}
             bounces={false}
-            data={qualityOptions}
+            data={downloadOptions}
             renderItem={this.renderItem}
             ItemSeparatorComponent={this.renderSeparator}
             keyExtractor={item => { return item.title }}
@@ -102,12 +100,12 @@ class QualitySelector extends Component {
 }
 
 const mapStateToProps = ({ settings }) => ({
-  qualityOptions: settings.qualityOptions,
-  isQualitySelectorVisible: settings.isQualitySelectorVisible,
+  downloadOptions: settings.downloadOptions,
+  isDownloadSelectorVisible: settings.isDownloadSelectorVisible,
 });
 
 export default connect(mapStateToProps, {
   downloadVideo,
-  showQualitySelector,
-  hideQualitySelector,
-})(QualitySelector)
+  showDownloadSelector,
+  hideDownloadSelector,
+})(DownloadSelector)
