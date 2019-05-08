@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {
   View,
   Image,
-  Text,
+  Alert,
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -38,11 +38,22 @@ class DownloadedVideoCard extends Component {
 
   onPress = () => this.setState({ startPlaying: true })
 
+  onDeletePress = () => {
+    const { onPressDelete } = this.props;
+    Alert.alert(
+      'Remove',
+      'Are you sure you want to remove this video?',
+      [
+        { text: 'Cancel', onPress: () => { }, style: 'cancel' },
+        { text: 'OK', onPress: onPressDelete },
+      ],
+    );
+  }
+
   renderPlayThumbnail = () => {
     const {
       duration,
       thumbnail,
-      onPressDelete,
     } = this.props;
 
     return (
@@ -89,7 +100,7 @@ class DownloadedVideoCard extends Component {
             duration={duration}
           />
           <TouchableWithoutFeedback
-            onPress={onPressDelete}
+            onPress={this.onDeletePress}
           >
             <View
               style={{

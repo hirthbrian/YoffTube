@@ -49,7 +49,7 @@ export const getOfflineVideos = () => {
 export const deleteVideo = (id) => {
   return (dispatch, getState) => {
     dispatch({ type: DELETE_VIDEO });
-    const videoInfo = getState().videos.downloaded[id];
+    const videoInfo = getState().download.items[id];
     FileSystem.deleteAsync(videoInfo.uri)
       .then(() => {
         AsyncStorage.removeItem(`@YoffTube:${id}`)

@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   Image,
-  Alert,
-  AsyncStorage,
   TouchableWithoutFeedback,
 } from 'react-native';
 import {
@@ -14,21 +12,6 @@ import Colors from './Colors';
 import Main from './views/Main';
 import Downloaded from './views/Downloaded';
 import Channel from './views/Channel';
-
-const clearAllVideo = () => {
-  Alert.alert(
-    'Clear everything',
-    'Are you sure you want to remove all videos?',
-    [
-      { text: 'Cancel', onPress: () => { }, style: 'cancel' },
-      {
-        text: 'OK', onPress: () => {
-          AsyncStorage.clear()
-        }
-      },
-    ],
-  );
-}
 
 const RootStack = createStackNavigator({
   Main: {
@@ -66,7 +49,7 @@ const RootStack = createStackNavigator({
   },
   Downloaded: {
     screen: Downloaded,
-    navigationOptions: () => ({
+    navigationOptions: ({ navigation }) => ({
       title: 'Downloaded',
       headerTintColor: Colors.white,
       headerStyle: {
@@ -81,7 +64,7 @@ const RootStack = createStackNavigator({
       },
       headerRight: (
         <TouchableWithoutFeedback
-          onPress={clearAllVideo}
+          onPress={navigation.getParam('headerRightButton')}
         >
           <Image
             source={require('../assets/garbage.png')}

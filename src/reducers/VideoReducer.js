@@ -6,6 +6,8 @@ import {
   DOWNLOAD_VIDEO_SUCCESS,
   DOWNLOAD_VIDEO_FAIL,
   SET_DOWNLOAD_PROGRESS,
+  GET_DOWNLOAD_URL,
+  GET_DOWNLOAD_URL_SUCCESS,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -20,7 +22,7 @@ export default (state = INITIAL_STATE, action) => {
     case CLEAR_VIDEOS:
       return {
         ...INITIAL_STATE,
-        items: {},  
+        items: {},
       };
     case SEARCH_VIDEOS:
       return {
@@ -79,6 +81,28 @@ export default (state = INITIAL_STATE, action) => {
             progress: null,
           }
         },
+      };
+    case GET_DOWNLOAD_URL:
+      return {
+        ...state,
+        items: {
+          ...state.items,
+          [action.payload.id]: {
+            ...state.items[action.payload.id],
+            progress: -1,
+          }
+        }
+      };
+    case GET_DOWNLOAD_URL_SUCCESS:
+      return {
+        ...state,
+        items: {
+          ...state.items,
+          [action.payload.id]: {
+            ...state.items[action.payload.id],
+            progress: null,
+          }
+        }
       };
     default:
       return state;
