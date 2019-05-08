@@ -3,10 +3,13 @@ import {
   View,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 import { connect } from 'react-redux';
 
+import DownloadSelector from '../components/DownloadSelector';
 import VideoCard from './VideoCard';
 import DownloadedVideoCard from './DownloadedVideoCard';
 import Colors from '../Colors';
@@ -65,45 +68,65 @@ class VideoList extends Component {
     />
   )
 
-  renderEmpty = () => (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Image
-        source={require('../../assets/icon.png')}
+  renderEmpty = () => {
+    const { loading } = this.props;
+
+    return (
+      <View
         style={{
-          width: 64,
-          height: 64,
-          opacity: 0.5
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
-      />
-    </View>
-  )
+      >
+        {loading ?
+          <ActivityIndicator
+            size="large"
+            color={Colors.red}
+          />
+          :
+          <Image
+            source={require('../../assets/icon.png')}
+            style={{
+              width: 64,
+              height: 64,
+              opacity: 0.5
+            }}
+          />
+        }
+      </View>
+    )
+  }
 
   render() {
     const {
       header,
       videos,
-      onRefresh
+      onRefresh,
+      onEndReached,
     } = this.props;
 
     return (
-      <FlatList
-        contentContainerStyle={{
-          flexGrow: 1,
+      <View
+        style={{
+          flex: 1
         }}
-        data={videos}
-        renderItem={this.renderItem}
-        ListEmptyComponent={this.renderEmpty}
-        ListHeaderComponent={header}
-        onRefresh={onRefresh}
-        refreshing={false}
-        keyExtractor={video => video.id}
-      />
+      >
+        <DownloadSelector />
+        <FlatList
+          contentContainerStyle={{
+            flexGrow: 1,
+          }}
+          data={videos}
+          renderItem={this.renderItem}
+          ListEmptyComponent={this.renderEmpty}
+          ListHeaderComponent={header}
+          onRefresh={onRefresh}
+          refreshing={false}
+          keyExtractor={video => video.id}
+          onEndReached={onEndReached}
+        />
+      </View>
     );
   }
 }
@@ -117,4 +140,4 @@ export default connect(mapStateToProps, {
   getDownloadUrl,
   deleteVideo,
   getChannelVideos
-})(VideoList)
+})(withNavigation(VideoList))

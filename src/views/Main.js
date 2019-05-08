@@ -4,7 +4,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux';
 
-import DownloadSelector from '../components/DownloadSelector';
 import VideoList from '../components/VideoList';
 
 import {
@@ -23,8 +22,11 @@ class Main extends Component {
 
   render() {
     const {
-      navigation,
+      query,
       videos,
+      loading,
+      pageToken,
+      searchVideos,
     } = this.props;
 
     return (
@@ -34,10 +36,10 @@ class Main extends Component {
         }}
       >
         <SearchBar />
-        <DownloadSelector />
         <VideoList
           videos={Object.values(videos)}
-          navigation={navigation}
+          loading={loading}
+          onEndReached={() => searchVideos(query, pageToken)}
         />
       </View>
     );
@@ -45,7 +47,10 @@ class Main extends Component {
 }
 
 const mapStateToProps = ({ videos }) => ({
+  query: videos.query,
   videos: videos.items,
+  loading: videos.loading,
+  pageToken: videos.pageToken
 });
 
 export default connect(mapStateToProps, {

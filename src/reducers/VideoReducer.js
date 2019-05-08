@@ -1,4 +1,6 @@
 import {
+  CLEAR_VIDEOS,
+  SEARCH_VIDEOS,
   SEARCH_VIDEOS_SUCCESS,
   DOWNLOAD_VIDEO,
   DOWNLOAD_VIDEO_SUCCESS,
@@ -7,19 +9,31 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = {
-  items: [],
+  items: {},
   pageToken: '',
+  query: '',
+  loading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case CLEAR_VIDEOS:
+      return {
+        ...INITIAL_STATE,
+        items: {},  
+      };
+    case SEARCH_VIDEOS:
+      return {
+        ...state,
+        loading: true,
+        query: action.payload
+      };
     case SEARCH_VIDEOS_SUCCESS:
       return {
         ...state,
-        pageToken: action.payload.pageToken,
-        items: {
-          ...action.payload.items,
-        },
+        loading: false,
+        pageToken: action.payload.nextPageToken,
+        items: Object.assign(state.items, action.payload.items),
       };
     case SET_DOWNLOAD_PROGRESS:
       return {

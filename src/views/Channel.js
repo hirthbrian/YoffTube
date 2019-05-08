@@ -21,18 +21,28 @@ class Channel extends Component {
   render() {
     const {
       items,
+      loading,
+      pageToken,
+      navigation,
+      getChannelVideos
     } = this.props;
+
+    const channelId = navigation.getParam('id');
 
     return (
       <VideoList
         videos={Object.values(items)}
+        loading={loading}
+        onEndReached={() => getChannelVideos(channelId, pageToken)}
       />
     );
   }
 }
 
 const mapStateToProps = ({ channel }) => ({
-  items: channel.items
+  items: channel.items,
+  loading: channel.loading,
+  pageToken: channel.pageToken
 });
 
 export default connect(mapStateToProps, {

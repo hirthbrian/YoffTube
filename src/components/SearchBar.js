@@ -8,6 +8,7 @@ import {
 import { connect } from 'react-redux';
 
 import {
+  clearVideos,
   searchVideos
 } from '../actions';
 import Colors from '../Colors';
@@ -23,7 +24,12 @@ class SearchBar extends React.Component {
 
   onChangeText = text => this.setState({ text });
 
-  clearText = () => this.setState({ text: '' })
+  clearText = () => {
+    const { clearVideos } = this.props;
+
+    clearVideos();
+    this.setState({ text: '' })
+  }
 
   onEndEditing = () => {
     const { text } = this.state;
@@ -94,4 +100,7 @@ class SearchBar extends React.Component {
   }
 }
 
-export default connect(null, { searchVideos })(SearchBar)
+export default connect(null, {
+  searchVideos,
+  clearVideos
+})(SearchBar)
