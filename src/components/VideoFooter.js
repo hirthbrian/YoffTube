@@ -30,8 +30,9 @@ class VideoFooter extends Component {
       >
         <View
           style={{
-            paddingVertical: 10,
+            paddingTop: 10,
             paddingHorizontal: 15,
+            paddingBottom: 20,
           }}
         >
           <Text

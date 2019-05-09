@@ -71,7 +71,7 @@ class SearchBar extends React.Component {
           <TextInput
             value={text}
             selectionColor={Colors.red}
-            placeholder={'Search with video title, url or id'}
+            placeholder={'Search for videos...'}
             onChangeText={this.onChangeText}
             onEndEditing={this.onEndEditing}
             style={{

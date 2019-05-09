@@ -20,10 +20,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CLEAR_VIDEOS:
-      return {
-        ...INITIAL_STATE,
-        items: {},
-      };
+      return INITIAL_STATE;
     case SEARCH_VIDEOS:
       return {
         ...state,
@@ -38,71 +35,41 @@ export default (state = INITIAL_STATE, action) => {
         items: Object.assign(state.items, action.payload.items),
       };
     case SET_DOWNLOAD_PROGRESS:
+      state.items[action.payload.id].progress = action.payload.progress
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: {
-            ...state.items[action.payload.id],
-            progress: action.payload.progress,
-          }
-        },
+        items: { ...state.items }
       };
     case DOWNLOAD_VIDEO:
+      state.items[action.payload.id].progress = -1
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: {
-            ...state.items[action.payload.id],
-            progress: -1,
-          }
-        }
+        items: { ...state.items }
       };
     case DOWNLOAD_VIDEO_SUCCESS:
+      state.items[action.payload.id].uri = action.payload.uri
+      state.items[action.payload.id].progress = null
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: {
-            ...state.items[action.payload.id],
-            uri: action.payload.uri,
-            progress: null,
-          }
-        },
+        items: { ...state.items }
       };
     case DOWNLOAD_VIDEO_FAIL:
+      state.items[action.payload.id].progress = null
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: {
-            ...state.items[action.payload.id],
-            progress: null,
-          }
-        },
+        items: { ...state.items }
       };
     case GET_DOWNLOAD_URL:
+      state.items[action.payload.id].progress = -1
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: {
-            ...state.items[action.payload.id],
-            progress: -1,
-          }
-        }
+        items: { ...state.items }
       };
     case GET_DOWNLOAD_URL_SUCCESS:
+      state.items[action.payload.id].progress = null
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: {
-            ...state.items[action.payload.id],
-            progress: null,
-          }
-        }
+        items: { ...state.items }
       };
     default:
       return state;

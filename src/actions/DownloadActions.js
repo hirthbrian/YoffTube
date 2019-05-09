@@ -88,7 +88,7 @@ export const getDownloadUrl = (id) => {
 }
 
 export const downloadVideo = (url, id) => (dispatch, getState) => {
-  let videoInfo = getState().videos.items[id];
+  let videoInfo = getState().videos.items[id] ||  getState().channel.items[id];
   let progressIteration = 1;
   dispatch({ type: DOWNLOAD_VIDEO, payload: { id } });
 

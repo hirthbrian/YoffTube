@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import VideoList from '../components/VideoList';
 
 import {
+  clearChannel,
   getChannelVideos
 } from '../actions';
 
@@ -11,11 +12,13 @@ class Channel extends Component {
   componentWillMount() {
     const {
       navigation,
+      clearChannel,
       getChannelVideos
     } = this.props;
 
     const channelId = navigation.getParam('id');
 
+    clearChannel();
     getChannelVideos(channelId)
   }
   render() {
@@ -46,5 +49,6 @@ const mapStateToProps = ({ channel }) => ({
 });
 
 export default connect(mapStateToProps, {
+  clearChannel,
   getChannelVideos
 })(Channel)

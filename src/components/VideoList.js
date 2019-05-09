@@ -59,15 +59,6 @@ class VideoList extends Component {
     )
   };
 
-  renderSeparator = () => (
-    <View
-      style={{
-        height: 5,
-        backgroundColor: Colors.grey
-      }}
-    />
-  )
-
   renderEmpty = () => {
     const { loading } = this.props;
 
@@ -123,8 +114,8 @@ class VideoList extends Component {
           ListHeaderComponent={header}
           onRefresh={onRefresh}
           refreshing={false}
+          // onEndReached={onEndReached}
           keyExtractor={video => video.id}
-          onEndReached={onEndReached}
         />
       </View>
     );
