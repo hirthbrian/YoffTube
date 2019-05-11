@@ -35,18 +35,21 @@ export default (state = INITIAL_STATE, action) => {
         items: Object.assign(state.items, action.payload.items),
       };
     case SET_DOWNLOAD_PROGRESS:
+      if (!state.items[action.payload.id]) return state
       state.items[action.payload.id].progress = action.payload.progress
       return {
         ...state,
         items: { ...state.items }
       };
     case DOWNLOAD_VIDEO:
+      if (!state.items[action.payload.id]) return state
       state.items[action.payload.id].progress = -1
       return {
         ...state,
         items: { ...state.items }
       };
     case DOWNLOAD_VIDEO_SUCCESS:
+      if (!state.items[action.payload.id]) return state
       state.items[action.payload.id].uri = action.payload.uri
       state.items[action.payload.id].progress = null
       return {
@@ -54,18 +57,21 @@ export default (state = INITIAL_STATE, action) => {
         items: { ...state.items }
       };
     case DOWNLOAD_VIDEO_FAIL:
+      if (!state.items[action.payload.id]) return state
       state.items[action.payload.id].progress = null
       return {
         ...state,
         items: { ...state.items }
       };
     case GET_DOWNLOAD_URL:
+      if (!state.items[action.payload.id]) return state
       state.items[action.payload.id].progress = -1
       return {
         ...state,
         items: { ...state.items }
       };
     case GET_DOWNLOAD_URL_SUCCESS:
+      if (!state.items[action.payload.id]) return state
       state.items[action.payload.id].progress = null
       return {
         ...state,

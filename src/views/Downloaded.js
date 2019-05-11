@@ -23,6 +23,7 @@ class Downloaded extends Component {
   }
 
   clearAllVideo = () => {
+    const { getOfflineVideos } = this.props;
     Alert.alert(
       'Clear everything',
       'Are you sure you want to remove all videos?',
@@ -30,7 +31,8 @@ class Downloaded extends Component {
         { text: 'Cancel', onPress: () => { }, style: 'cancel' },
         {
           text: 'OK', onPress: () => {
-            AsyncStorage.clear()
+            AsyncStorage.clear();
+            getOfflineVideos();
           }
         },
       ],
