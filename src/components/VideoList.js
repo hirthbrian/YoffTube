@@ -114,7 +114,7 @@ class VideoList extends Component {
           ListHeaderComponent={header}
           onRefresh={onRefresh}
           refreshing={false}
-          // onEndReached={onEndReached}
+          onEndReached={onEndReached}
           keyExtractor={video => video.id}
         />
       </View>

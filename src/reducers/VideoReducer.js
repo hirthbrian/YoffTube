@@ -20,7 +20,10 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CLEAR_VIDEOS:
-      return INITIAL_STATE;
+      return {
+        ...INITIAL_STATE,
+        items: {},
+      };
     case SEARCH_VIDEOS:
       return {
         ...state,

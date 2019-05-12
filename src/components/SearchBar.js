@@ -33,8 +33,12 @@ class SearchBar extends React.Component {
 
   onEndEditing = () => {
     const { text } = this.state;
-    const { searchVideos } = this.props;
+    const {
+      clearVideos,
+      searchVideos
+    } = this.props;
     if (text.length > 0) {
+      clearVideos();
       searchVideos(text);
     }
   }
@@ -81,7 +85,7 @@ class SearchBar extends React.Component {
             }}
           />
           {text.length > 0 &&
-            < TouchableWithoutFeedback
+            <TouchableWithoutFeedback
               onPress={this.clearText}
             >
               <Image
@@ -95,7 +99,7 @@ class SearchBar extends React.Component {
             </TouchableWithoutFeedback>
           }
         </View>
-      </View >
+      </View>
     );
   }
 }

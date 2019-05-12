@@ -21,7 +21,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
         items: {},
-      };;
+      };
     case GET_CHANNEL:
       return {
         ...state,
