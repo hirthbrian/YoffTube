@@ -13,7 +13,7 @@ import {
 } from 'expo';
 
 import Colors from '../Colors';
-import VideoFooter from './VideoFooter';
+import VideoInfo from './VideoInfo';
 import Duration from './Duration';
 
 class DownloadedVideoCard extends Component {
@@ -180,7 +180,7 @@ class DownloadedVideoCard extends Component {
         }}
       >
         {this.renderThumbnail()}
-        <VideoFooter
+        <VideoInfo
           date={date}
           title={title}
           views={views}

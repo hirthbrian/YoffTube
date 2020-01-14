@@ -10,6 +10,6 @@ const Colors = {
   black: '#000000',
   transparentBlack: 'rgba(0,0,0,0.75)',
   transparentRed: 'rgba(255,91,90,0.75)',
-}
+};
 
 export default Colors;

@@ -3,19 +3,17 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {
-  createStackNavigator,
-  createAppContainer,
-} from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 import Colors from './Colors';
-import Main from './views/Main';
-import Downloaded from './views/Downloaded';
-import Channel from './views/Channel';
+import Home from './screens/Home';
+import Downloaded from './screens/Downloaded';
+import Channel from './screens/Channel';
 
 const RootStack = createStackNavigator({
-  Main: {
-    screen: Main,
+  Home: {
+    screen: Home,
     navigationOptions: ({ navigation }) => ({
       title: 'YoffTube',
       headerTintColor: Colors.white,

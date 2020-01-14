@@ -9,7 +9,7 @@ import {
 import DownloadButton from './DownloadButton';
 import Duration from './Duration';
 import Colors from '../Colors';
-import VideoFooter from './VideoFooter';
+import VideoInfo from './VideoInfo';
 
 class VideoCard extends Component {
   renderThumbnail = () => {
@@ -39,10 +39,10 @@ class VideoCard extends Component {
             left: 0,
           }}
         />
-        <DownloadButton
+        {/* <DownloadButton
           progress={progress}
           onPress={onDownloadPress}
-        />
+        /> */}
         <Duration
           duration={duration}
         />
@@ -66,7 +66,7 @@ class VideoCard extends Component {
         }}
       >
         {this.renderThumbnail()}
-        <VideoFooter
+        <VideoInfo
           date={date}
           title={title}
           views={views}
