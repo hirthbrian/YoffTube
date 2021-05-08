@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "approximate-number": "^2.0.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "expo": "^41.0.0",
     "expo-font": "~9.1.0",
     "moment": "^2.24.0",
